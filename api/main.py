@@ -14,13 +14,16 @@ Run with:
 """
 import asyncio
 import json
+import os
 import uuid
 from collections import OrderedDict
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, Response, StreamingResponse
+from fastapi.responses import FileResponse, HTMLResponse, Response, StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from graph.state import PassageState
@@ -37,6 +40,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ── Serve React build (production) ────────────────────────────────────────────
+_DIST = Path(__file__).parent.parent / "frontend" / "dist"
+if _DIST.exists():
+    app.mount("/assets", StaticFiles(directory=str(_DIST / "assets")), name="assets")
 
 # ── In-memory render store (last 100 HTML reports + states) ───────────────────
 _renders: OrderedDict[str, str]  = OrderedDict()
@@ -270,3 +278,13 @@ async def get_render_pdf(render_id: str) -> Response:
 
 def _sse(data: dict) -> str:
     return f"data: {json.dumps(data, ensure_ascii=False)}\n\n"
+
+
+# ── SPA catch-all (must be last) ──────────────────────────────────────────────
+@app.get("/{full_path:path}", include_in_schema=False)
+async def spa_fallback(full_path: str) -> FileResponse:
+    """Serve React's index.html for all non-API routes (SPA routing)."""
+    index = _DIST / "index.html"
+    if index.exists():
+        return FileResponse(str(index))
+    raise HTTPException(status_code=404, detail="Frontend not built.")
