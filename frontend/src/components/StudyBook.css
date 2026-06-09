@@ -1,0 +1,190 @@
+.book-shell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+  padding: 28px 16px 20px;
+  gap: 0;
+  position: relative;
+}
+
+.book-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* react-pageflip container */
+.the-book {
+  box-shadow: 0 30px 80px rgba(0,0,0,.7);
+  border-radius: 2px 4px 4px 2px;
+}
+
+/* ── Navigation arrows ── */
+.nav-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18);
+  color: #fff;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 2px;
+}
+.nav-arrow:hover { background: rgba(255,255,255,.2); transform: translateY(-50%) scale(1.08); }
+.nav-arrow.hidden { opacity: 0; pointer-events: none; }
+.nav-left  { left: 20px; }
+.nav-right { right: 20px; }
+
+/* ── Footer ── */
+.book-footer {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.page-dots {
+  display: flex;
+  gap: 8px;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.2);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background .2s, transform .2s;
+}
+.dot.active { background: #818cf8; transform: scale(1.35); }
+.dot:hover  { background: rgba(255,255,255,.45); }
+
+.page-counter {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: rgba(255,255,255,.4);
+  letter-spacing: 1px;
+}
+
+/* ── Download bar ── */
+.download-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 12px 20px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.dl-label {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: rgba(255,255,255,.6);
+  letter-spacing: .3px;
+}
+
+.dl-btns {
+  display: flex;
+  gap: 10px;
+}
+
+.dl-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 20px;
+  border-radius: 10px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  text-decoration: none;
+  transition: opacity .2s, transform .15s;
+  cursor: pointer;
+}
+.dl-btn:hover { opacity: .88; transform: translateY(-2px); }
+
+.dl-html {
+  background: #1e40af;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(30,64,175,.4);
+}
+.dl-pdf {
+  background: #be123c;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(190,18,60,.4);
+}
+
+.dl-icon { font-size: 16px; }
+
+/* ── Shared page styles (used by all page components) ── */
+.sp-root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  background: #fff;
+  font-family: 'Nunito', sans-serif;
+}
+
+.sp-header {
+  padding: 14px 20px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sp-header-label {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.92);
+}
+
+.sp-body {
+  padding: 16px 20px 14px;
+  overflow: hidden;
+  height: calc(100% - 54px - 28px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sp-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: rgba(0,0,0,.3);
+  border-top: 1px solid rgba(0,0,0,.07);
+}

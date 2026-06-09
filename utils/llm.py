@@ -9,7 +9,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-MODEL = "llama-3.1-8b-instant"
+MODEL_FAST = "llama-3.1-8b-instant"     # guardrail + compression — speed matters
+MODEL_BEST = "llama-3.3-70b-versatile"  # all content agents — quality matters
 
 _RETRY_DELAYS = [8, 20, 45]
 
@@ -24,7 +25,8 @@ def _new_async_client() -> AsyncGroq:
 
 # ── Synchronous (used by Streamlit) ───────────────────────────────────────────
 
-def call_claude(prompt: str, system: str, max_tokens: int = 2048) -> str:
+def call_claude(prompt: str, system: str, max_tokens: int = 2048,
+                model: str = MODEL_BEST) -> str:
     last_exc: Exception | None = None
     for delay in [0] + _RETRY_DELAYS:
         if delay:
@@ -32,7 +34,7 @@ def call_claude(prompt: str, system: str, max_tokens: int = 2048) -> str:
         try:
             client = _new_client()
             response = client.chat.completions.create(
-                model=MODEL,
+                model=model,
                 max_tokens=max_tokens,
                 messages=[
                     {"role": "system", "content": system},
@@ -47,7 +49,8 @@ def call_claude(prompt: str, system: str, max_tokens: int = 2048) -> str:
 
 # ── Asynchronous (used by FastAPI + parallel LangGraph nodes) ─────────────────
 
-async def acall_claude(prompt: str, system: str, max_tokens: int = 2048) -> str:
+async def acall_claude(prompt: str, system: str, max_tokens: int = 2048,
+                       model: str = MODEL_BEST) -> str:
     last_exc: Exception | None = None
     for delay in [0] + _RETRY_DELAYS:
         if delay:
@@ -55,7 +58,7 @@ async def acall_claude(prompt: str, system: str, max_tokens: int = 2048) -> str:
         try:
             client = _new_async_client()
             response = await client.chat.completions.create(
-                model=MODEL,
+                model=model,
                 max_tokens=max_tokens,
                 messages=[
                     {"role": "system", "content": system},

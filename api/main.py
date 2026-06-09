@@ -59,10 +59,11 @@ def _save_render(html: str, state: dict | None = None) -> str:
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
 
-def _make_initial_state(passage: str) -> PassageState:
+def _make_initial_state(passage: str, requested_grade: str = "Grade 6-12") -> PassageState:
     return PassageState(
         passage=passage,
         compressed_passage="",
+        requested_grade=requested_grade,
         guardrail_status="",
         guardrail_issues=[],
         topic="",
@@ -109,6 +110,7 @@ def _pick(output: dict, node: str) -> dict:
 
 class AnalyzeRequest(BaseModel):
     passage: str
+    grade_level: str = "Grade 6-12"  # "Grade 1-2" | "Grade 3-5" | "Grade 6-12"
 
 
 # ── Routes ─────────────────────────────────────────────────────────────────────
@@ -127,7 +129,7 @@ async def analyze(req: AnalyzeRequest) -> dict[str, Any]:
         raise HTTPException(status_code=422, detail="passage must not be empty")
 
     graph = build_async_graph()
-    state = _make_initial_state(req.passage)
+    state = _make_initial_state(req.passage, req.grade_level)
     final: dict = dict(state)
 
     async for event in graph.astream(state):
@@ -173,7 +175,7 @@ async def analyze_stream(req: AnalyzeRequest) -> StreamingResponse:
 
     async def event_generator():
         graph = build_async_graph()
-        state = _make_initial_state(req.passage)
+        state = _make_initial_state(req.passage, req.grade_level)
         final: dict = dict(state)
 
         try:
