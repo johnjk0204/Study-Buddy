@@ -1,12 +1,9 @@
 """
 PDF generation for Study Buddy AI.
 
-Primary  : WeasyPrint — converts our HTML report to PDF (best fidelity,
-           needs GTK/Cairo on Windows: https://weasyprint.org/start/)
+Primary  : WeasyPrint (optional) — best fidelity; lazy-imported so a missing
+           install or missing GTK/Cairo runtime silently falls back to fpdf2.
 Fallback : fpdf2 — pure-Python, zero system deps, always works.
-
-Install both:
-    pip install weasyprint fpdf2
 """
 import io
 import re
